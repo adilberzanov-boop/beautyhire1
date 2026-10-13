@@ -42,22 +42,60 @@ if (DEMO_MODE) document.body.classList.add('not-configured');
 // - makePhotos: карточки портфолио — брендированные плашки по специальности,
 //   а не случайные несвязанные стоковые фото
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Иконки (inline SVG, stroke) — вместо эмодзи
+// ---------------------------------------------------------------------------
+const ICON_PATHS = {
+  x: '<path d="M18 6 6 18M6 6l12 12"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+  send: '<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  heart: '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/>',
+  message: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  sliders: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+  briefcase: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
+  pin: '<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  wallet: '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',
+  layers: '<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
+  award: '<circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/>',
+  clipboard: '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  inbox: '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.7 4H7.3a2 2 0 0 0-1.8 1.1z"/>',
+  store: '<path d="M3 9l1-5h16l1 5"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/>',
+  scissors: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/>',
+  alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
+  card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+  trending: '<path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/>',
+  star: '<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/>',
+  back: '<path d="m15 18-6-6 6-6"/>',
+  chevron: '<path d="m6 9 6 6 6-6"/>',
+  logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>',
+  tag: '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.2"/>',
+};
+function ic(name, size = 18, filled = false) {
+  const key = ICON_PATHS[name] ? name : 'inbox';
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${filled ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.2em;flex-shrink:0" aria-hidden="true">${ICON_PATHS[key]}</svg>`;
+}
+
 const slug = (s) => encodeURIComponent(s || 'x');
-const masterAvatar = (name) => `https://api.dicebear.com/7.x/avataaars/svg?seed=${slug(name)}&backgroundColor=f3d9e0,fbf6e7,f0f4ee&radius=50`;
-const salonLogo = (name) => `https://api.dicebear.com/7.x/initials/svg?seed=${slug(name)}&backgroundColor=7a1f3b,8c2a48,c9a227,6b7f5e&fontFamily=Georgia&fontWeight=700&radius=50`;
+const masterAvatar = (name) => `https://api.dicebear.com/7.x/initials/svg?seed=${slug(name)}&backgroundColor=c92a78,e0488c,a31d62,f2603f&fontFamily=Arial&fontWeight=600&radius=50`;
+const salonLogo = (name) => `https://api.dicebear.com/7.x/initials/svg?seed=${slug(name)}&backgroundColor=a31d62,c92a78,e0488c,f2603f&fontFamily=Arial&fontWeight=600&radius=12`;
 
 const SPECIALTY_VISUAL = {
-  'Nail-мастер': { emoji: '💅', from: '#F3D9E0', to: '#7A1F3B' },
-  'Парикмахер': { emoji: '✂️', from: '#FBF6E7', to: '#7A1F3B' },
-  'Визажист': { emoji: '💄', from: '#FDF3EF', to: '#8C2A48' },
-  'Бровист/Лешмейкер': { emoji: '👁️', from: '#F0F4EE', to: '#5C172D' },
-  'Косметолог': { emoji: '✨', from: '#FBF6E7', to: '#6B7F5E' },
-  'Массажист': { emoji: '🌿', from: '#F0F4EE', to: '#E29578' },
+  'Nail-мастер': { from: '#FFD9E8', to: '#C92A78' },
+  'Парикмахер': { from: '#FFF4DB', to: '#C92A78' },
+  'Визажист': { from: '#FFEDE8', to: '#E0488C' },
+  'Бровист/Лешмейкер': { from: '#E3F7F0', to: '#A31D62' },
+  'Косметолог': { from: '#FFF4DB', to: '#0F9D74' },
+  'Массажист': { from: '#E3F7F0', to: '#F2603F' },
 };
 function tileSVG(specialty, variant) {
-  const v = SPECIALTY_VISUAL[specialty] || { emoji: '💇', from: '#F3D9E0', to: '#7A1F3B' };
+  const v = SPECIALTY_VISUAL[specialty] || { from: '#FFD9E8', to: '#C92A78' };
   const angle = [20, 110, 200, 300][variant % 4];
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><defs><linearGradient id='g${variant}' x1='0%' y1='0%' x2='100%' y2='100%' gradientTransform='rotate(${angle} 200 200)'><stop offset='0%' stop-color='${v.from}'/><stop offset='100%' stop-color='${v.to}'/></linearGradient></defs><rect width='400' height='400' fill='url(#g${variant})'/><text x='200' y='235' font-size='150' text-anchor='middle'>${v.emoji}</text></svg>`;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><defs><linearGradient id='g${variant}' x1='0%' y1='0%' x2='100%' y2='100%' gradientTransform='rotate(${angle} 200 200)'><stop offset='0%' stop-color='${v.from}'/><stop offset='100%' stop-color='${v.to}'/></linearGradient></defs><rect width='400' height='400' fill='url(#g${variant})'/><path d='M-50 450 L450 -50 M-150 450 L450 -150 M50 450 L450 50 M150 450 L450 150' stroke='white' stroke-opacity='.10' stroke-width='14'/></svg>`;
   return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
 }
 const makePhotos = (specialty) => [0, 1, 2, 3].map(i => tileSVG(specialty, i));
@@ -151,7 +189,7 @@ const state = {
 const app = document.getElementById('app');
 const escapeHtml = (str) => (str ?? '').toString().replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const money = (n) => n ? Number(n).toLocaleString('ru-RU') + ' ₸' : '—';
-const stars = (rating) => '★'.repeat(Math.round(rating || 0)) + '☆'.repeat(5 - Math.round(rating || 0));
+const stars = (rating) => { const r = Math.round(rating || 0); return `<span style="display:inline-flex;gap:2px;vertical-align:middle">${[1,2,3,4,5].map(i => `<span style="opacity:${i <= r ? 1 : 0.28}">${ic('star', 13, true)}</span>`).join('')}</span>`; };
 
 function showToast(msg, type = 'success') {
   const div = document.createElement('div');
@@ -167,7 +205,7 @@ function openModal(html) {
   document.getElementById('modalRoot').innerHTML = `
     <div class="fixed inset-0 bg-black/40 z-50 flex items-end md:items-center justify-center" data-modal-overlay>
       <div class="bg-white w-full md:max-w-lg md:rounded-2xl rounded-t-2xl max-h-[90vh] overflow-y-auto p-6 relative" data-modal-panel>
-        <button data-modal-close class="absolute top-4 right-4 text-warm-500 hover:text-ink text-xl leading-none">✕</button>
+        <button data-modal-close class="absolute top-4 right-4 text-warm-500 hover:text-ink">${ic('x', 18)}</button>
         ${html}
       </div>
     </div>`;
@@ -188,7 +226,11 @@ function closeModal() {
   }
   document.getElementById('modalRoot').innerHTML = '';
 }
-function goto(hash) { location.hash = hash; }
+function goto(hash) {
+  // если адрес не меняется, hashchange не сработает — перерисовываем вручную
+  if (location.hash === hash || (!location.hash && hash === '#/')) { parseRoute(); render(); window.scrollTo(0, 0); }
+  else location.hash = hash;
+}
 
 function matchesSalary(value, range) {
   if (!range) return true;
@@ -644,49 +686,45 @@ function sidebarFilters() {
   const chk = (fmt) => f.formats.includes(fmt);
   const n = activeFilterCount();
   return `
-  <aside id="filterSidebar" class="hidden lg:block card p-5 h-fit lg:sticky lg:top-20 overflow-hidden relative group">
-    <div class="absolute -top-10 -right-10 w-28 h-28 rounded-full bg-plum-50 opacity-60" style="animation: pulseSlow 4s ease-in-out infinite;"></div>
+  <aside id="filterSidebar" class="hidden lg:block card p-5 h-fit lg:sticky lg:top-20 relative border-t-4 !border-t-plum">
     <div class="flex items-center justify-between mb-5 relative">
-      <h3 class="font-bold flex items-center gap-2">
-        <span class="w-8 h-8 rounded-lg bg-plum-50 flex items-center justify-center text-sm transition-transform duration-500 group-hover:rotate-90">⚙️</span>
-        Фильтры
-      </h3>
+      <h3 class="font-bold flex items-center gap-2 text-base"><span class="w-8 h-8 rounded-lg bg-plum-50 text-plum flex items-center justify-center">${ic('sliders', 16)}</span> Фильтры</h3>
       <span id="filterCountBadge">${n ? `<span class="tag bg-plum text-white">${n}</span>` : ''}</span>
     </div>
     <div class="space-y-4 relative">
       <div>
-        <label class="text-xs text-warm-500 mb-1 flex items-center gap-1.5">💼 Специализация</label>
+        <label class="text-xs font-semibold text-warm-600 mb-1.5 flex items-center gap-1.5">${ic('briefcase', 14)} Специализация</label>
         <select data-filter="specialty" class="input">
           <option value="">Все специализации</option>
           ${SPECIALTIES.map(s => `<option ${f.specialty === s ? 'selected' : ''}>${s}</option>`).join('')}
         </select>
       </div>
       <div>
-        <label class="text-xs text-warm-500 mb-1 flex items-center gap-1.5">📍 Район</label>
+        <label class="text-xs font-semibold text-warm-600 mb-1.5 flex items-center gap-1.5">${ic('pin', 14)} Район</label>
         <select data-filter="district" class="input">
           <option value="">Весь Алматы</option>
           ${DISTRICTS.map(d => `<option ${f.district === d ? 'selected' : ''}>${d}</option>`).join('')}
         </select>
       </div>
       <div>
-        <label class="text-xs text-warm-500 mb-1 flex items-center gap-1.5">💰 Зарплата</label>
+        <label class="text-xs font-semibold text-warm-600 mb-1.5 flex items-center gap-1.5">${ic('wallet', 14)} Зарплата</label>
         <select data-filter="salaryRange" class="input">
           ${SALARY_RANGES.map(r => `<option value="${r.value}" ${f.salaryRange === r.value ? 'selected' : ''}>${r.label}</option>`).join('')}
         </select>
       </div>
-      <button type="button" data-action="toggle-experienced" class="w-full text-left flex items-center gap-2 text-sm rounded-xl px-3 py-2.5 transition ${f.experienced ? 'bg-plum text-white' : 'bg-warm-50 text-warm-600 hover:bg-warm-100'}">
-        ⭐ Только с опытом
+      <button type="button" data-action="toggle-experienced" class="w-full text-left flex items-center gap-2 text-sm rounded-xl px-3 py-2.5 transition ${f.experienced ? 'bg-plum text-white shadow-sm' : 'bg-warm-50 text-warm-600 border border-warm-200 hover:border-plum hover:text-plum'}">
+        ${ic('award', 16)} Только с опытом
       </button>
       <div>
-        <p class="text-xs text-warm-500 mb-2 flex items-center gap-1.5">🗂️ Формат работы</p>
+        <p class="text-xs font-semibold text-warm-600 mb-2 flex items-center gap-1.5">${ic('layers', 14)} Формат работы</p>
         <div class="flex flex-wrap gap-1.5">
           ${FORMATS.map(fo => `
-          <button type="button" data-action="toggle-format" data-format="${fo}" class="text-sm rounded-full px-3 py-1.5 border transition ${chk(fo) ? 'bg-plum text-white border-plum' : 'border-warm-200 text-warm-600 hover:border-plum'}">
+          <button type="button" data-action="toggle-format" data-format="${fo}" class="text-sm filter-pill rounded-lg px-3.5 py-2 border ${chk(fo) ? 'bg-plum text-white border-plum shadow-sm' : 'bg-white border-warm-300 text-warm-600 hover:border-plum hover:text-plum'}">
             ${fo}
           </button>`).join('')}
         </div>
       </div>
-      <div id="filterResetArea">${n ? `<button data-action="reset-filters" class="text-sm text-plum hover:underline font-medium">✕ Сбросить фильтры (${n})</button>` : `<p class="text-xs text-warm-300">Фильтры не выбраны</p>`}</div>
+      <div id="filterResetArea">${n ? `<button data-action="reset-filters" class="text-sm text-plum hover:underline font-medium inline-flex items-center gap-1.5">${ic('x', 14)} Сбросить фильтры (${n})</button>` : `<p class="text-xs text-warm-300">Фильтры не выбраны</p>`}</div>
     </div>
   </aside>`;
 }
@@ -697,7 +735,7 @@ function updateFilterSidebarBadges() {
   if (badge) badge.innerHTML = n ? `<span class="tag bg-plum text-white">${n}</span>` : '';
   const resetArea = document.getElementById('filterResetArea');
   if (resetArea) resetArea.innerHTML = n
-    ? `<button data-action="reset-filters" class="text-sm text-plum hover:underline font-medium">✕ Сбросить фильтры (${n})</button>`
+    ? `<button data-action="reset-filters" class="text-sm text-plum hover:underline font-medium inline-flex items-center gap-1.5">${ic('x', 14)} Сбросить фильтры (${n})</button>`
     : `<p class="text-xs text-warm-300">Фильтры не выбраны</p>`;
 }
 
@@ -714,7 +752,7 @@ function favBtn(type, id) {
   const key = `${type}:${id}`;
   const active = state.favorites.has(key);
   return `<button data-action="toggle-fav" data-fav-type="${type}" data-fav-id="${id}" class="w-11 h-11 shrink-0 rounded-xl border ${active ? 'border-plum bg-plum-50 fav-active' : 'border-warm-200 text-warm-500'} flex items-center justify-center hover:border-plum transition" title="В избранное">
-    ${active ? '❤️' : '🤍'}
+    ${ic('heart', 18, active)}
   </button>`;
 }
 
@@ -725,20 +763,20 @@ function vacancyCard(v) {
   const tags = v.tags || [v.specialty];
   const isOwner = state.user && state.profile?.role === 'salon' && (v.salon_id === state.user.id || v.salon_id === 'me');
   return `
-  <div class="card p-4 hover:shadow-cardHover transition">
+  <div class="card p-5 hover:shadow-cardHover ${v.is_premium ? 'ring-2 ring-gold/30' : ''}">
     <div class="flex gap-3 items-start cursor-pointer" data-action="go" data-href="#/vacancy/${v.id}">
       <img src="${logo}" class="w-14 h-14 rounded-full object-cover border border-warm-100 shrink-0 bg-white">
       <div class="min-w-0 flex-1">
         <div class="flex items-center gap-2 flex-wrap">
           <a href="#/salon/${salonKeyFor(v)}" onclick="event.stopPropagation()" class="font-bold truncate hover:text-plum">${escapeHtml(salonName)}</a>
-          ${v.is_premium ? '<span class="tag bg-gold-50 text-gold">★ Premium</span>' : ''}
+          ${v.is_premium ? `<span class="tag bg-gold-50 text-gold inline-flex items-center gap-1">${ic('star', 12, true)} Premium</span>` : ''}
           ${isOwner ? '<span class="tag bg-sage-50 text-sage">Ваша вакансия</span>' : ''}
         </div>
         <p class="text-sm text-warm-500">${escapeHtml(v.specialty)}</p>
-        <p class="text-amber-500 text-sm">${stars(v.rating)} <span class="text-warm-500">(${v.reviews_count || 0} отзывов)</span></p>
+        <p class="text-gold text-sm">${stars(v.rating)} <span class="text-warm-500">(${v.reviews_count || 0} отзывов)</span></p>
         <p class="text-xs text-warm-500 mt-0.5">${escapeHtml(v.district || '')}</p>
       </div>
-      <p class="text-plum font-bold text-sm text-right shrink-0">${money(v.salary_from)}–${money(v.salary_to)}</p>
+      <p class="text-plum font-bold text-sm text-right shrink-0 bg-plum-50 rounded-lg px-2.5 py-1.5">${money(v.salary_from)}–${money(v.salary_to)}</p>
     </div>
 
     ${photos.length ? `
@@ -770,17 +808,17 @@ function masterCard(m) {
   const photos = (m.portfolio_photos || m.photos || []).map(p => p.url || p).slice(0, 4);
   const avatar = m.avatar_url || m.avatar || masterAvatar(m.full_name);
   return `
-  <div class="card p-4 hover:shadow-cardHover transition">
+  <div class="card p-5 hover:shadow-cardHover">
     <div class="flex gap-3 items-start cursor-pointer" data-action="go" data-href="#/master/${m.id}">
       <img src="${avatar}" class="w-14 h-14 rounded-full object-cover border border-warm-100 shrink-0 bg-white">
       <div class="min-w-0 flex-1">
         <div class="flex items-center gap-1.5 flex-wrap">
           <h3 class="font-bold truncate">${escapeHtml(m.full_name)}</h3>
-          ${m.verified ? '<span title="Проверенный профиль" class="text-plum text-sm">✓</span>' : ''}
+          ${m.verified ? '<span title="Проверенный профиль" class="text-plum text-sm">' + ic('check', 14) + '</span>' : ''}
           ${m.urgent ? '<span class="tag bg-sage-50 text-sage">Ищет срочно</span>' : ''}
         </div>
         <p class="text-sm text-warm-500">${escapeHtml(m.specialty)} • ${m.experience_years || 0} {{YEARS}}</p>
-        <p class="text-amber-500 text-sm">${stars(m.rating)} <span class="text-warm-500">(${m.reviews_count || 0} отзывов)</span></p>
+        <p class="text-gold text-sm">${stars(m.rating)} <span class="text-warm-500">(${m.reviews_count || 0} отзывов)</span></p>
       </div>
       <div class="text-right shrink-0">
         <p class="text-plum font-bold text-sm">${money(m.desired_salary)}</p>
@@ -819,10 +857,10 @@ function yearsWord(n) {
 }
 function fixYears(html, n) { return html.replace('{{YEARS}}', yearsWord(n)); }
 
-function emptyState(text, icon = '✨', ctaLabel, ctaHref) {
+function emptyState(text, icon = 'inbox', ctaLabel, ctaHref) {
   return `
-  <div class="col-span-full text-center py-16 px-6 border border-dashed border-warm-200 rounded-2xl bg-white">
-    <div class="w-14 h-14 mx-auto rounded-full bg-plum-50 flex items-center justify-center text-2xl mb-4">${icon}</div>
+  <div class="col-span-full text-center py-16 px-6 border border-warm-200 rounded-lg bg-white">
+    <div class="w-12 h-12 mx-auto rounded-lg bg-plum-50 text-plum flex items-center justify-center mb-4">${ic(icon, 22)}</div>
     <p class="text-warm-500 max-w-sm mx-auto">${escapeHtml(text)}</p>
     ${ctaLabel ? `<a href="${ctaHref}" class="btn-primary inline-block mt-4 text-sm">${escapeHtml(ctaLabel)}</a>` : ''}
   </div>`;
@@ -850,6 +888,7 @@ function skeletonCards(n = 4) {
 // 8. РЕНДЕР ЭКРАНОВ
 // ---------------------------------------------------------------------------
 async function render() {
+  if (typeof currentChatChannel !== 'undefined' && currentChatChannel && !(state.route === '/chats' && state.params.id)) { try { sb?.removeChannel(currentChatChannel); } catch (e) {} currentChatChannel = null; }
   fillDistrictSelects();
   renderHeaderAuth();
   const r = state.route;
@@ -872,17 +911,17 @@ async function render() {
   if (r === '/salon') return renderSalonPublicPage(state.params.id);
   if (r === '/services') return renderServicesSettings();
   if (r === '/bookings') return renderMyBookings();
-  if (r === '/chats') return renderChats();
+  if (r === '/chats') return state.params.id ? renderChatThread(state.params.id) : renderChats();
   app.innerHTML = `<div class="py-20 text-center text-warm-500">Страница не найдена. <a href="#/" class="text-plum underline">На главную</a></div>`;
 }
 
 async function statsBar() {
   const stats = await Data.getStats();
   return `
-  <div class="flex flex-wrap gap-x-6 gap-y-1 text-sm text-warm-500 mt-3">
-    <span><b class="text-ink">${stats.masters}</b> мастеров</span>
-    <span><b class="text-ink">${stats.salons}</b> салонов</span>
-    <span><b class="text-ink">${stats.activeVacancies}</b> активных вакансий сейчас</span>
+  <div class="inline-flex flex-wrap divide-x divide-white/25 border border-white/25 rounded-xl bg-white/10 backdrop-blur mt-6 text-sm">
+    <div class="px-5 py-3"><span class="text-xl font-bold text-white">${stats.masters}</span> <span class="text-white/75">мастеров</span></div>
+    <div class="px-5 py-3"><span class="text-xl font-bold text-white">${stats.salons}</span> <span class="text-white/75">салонов</span></div>
+    <div class="px-5 py-3"><span class="text-xl font-bold text-white">${stats.activeVacancies}</span> <span class="text-white/75">активных вакансий</span></div>
   </div>`;
 }
 
@@ -904,14 +943,14 @@ async function adSlot() {
 
 async function renderBrowse() {
   app.innerHTML = `
-  <section class="py-8 md:py-10">
-    <h1 class="text-2xl md:text-3xl font-serif font-bold max-w-2xl leading-tight">
-      ${state.roleTab === 'master' ? 'Найдите работу мечты в бьюти-индустрии' : 'Найдите проверенного мастера для салона'}
+  <section class="hero-bg text-white rounded-2xl px-6 md:px-10 py-8 md:py-12 mt-6 mb-8 shadow-cardHover">
+    <h1 class="text-3xl md:text-5xl font-serif font-bold max-w-3xl leading-tight">
+      ${state.roleTab === 'master' ? 'Вакансии в бьюти-индустрии Алматы' : 'База мастеров для вашего салона'}
     </h1>
-    <p class="text-warm-500 mt-2 max-w-xl text-sm md:text-base">
-      ${state.roleTab === 'master' ? 'Реальные вакансии салонов Алматы — с зарплатой, графиком и условиями сразу на карточке.' : 'Портфолио, опыт и отзывы каждого мастера — приглашайте напрямую, без посредников.'}
+    <p class="text-white/80 mt-3 max-w-xl text-base md:text-lg">
+      ${state.roleTab === 'master' ? 'Зарплата, график и условия указаны на карточке каждой вакансии.' : 'Портфолио, опыт и отзывы каждого мастера. Приглашайте напрямую, без посредников.'}
     </p>
-    <div id="statsBarBox">Загрузка статистики…</div>
+    <div id="statsBarBox" class="text-white/70 mt-6 text-sm">Загрузка статистики…</div>
   </section>
 
   <div class="lg:hidden mb-4">
@@ -925,7 +964,7 @@ async function renderBrowse() {
       <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
         <div class="flex items-center gap-2">
           <button data-action="open-filter-drawer" class="lg:hidden btn-secondary !px-3 !py-2 text-sm flex items-center gap-1.5">
-            <span>☰</span> Фильтры <span id="mobileFilterBadge"></span>
+            ${ic('sliders', 16)} Фильтры <span id="mobileFilterBadge"></span>
           </button>
           <p id="resultsCount" class="text-sm text-warm-600 font-medium">Загрузка…</p>
         </div>
@@ -942,6 +981,40 @@ async function renderBrowse() {
   await refreshResults();
 }
 
+
+function openMobileMenu() {
+  const isAuth = !!state.user;
+  const link = (href, icon, label) => `<button data-modal-close data-action="go" data-href="${href}" class="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left text-sm font-medium text-warm-700 hover:bg-warm-100">${ic(icon, 18)} ${label}</button>`;
+  document.getElementById('modalRoot').innerHTML = `
+    <div class="fixed inset-0 bg-black/40 z-50 flex" data-modal-overlay>
+      <div class="bg-white w-[84%] max-w-xs h-full overflow-y-auto p-5 flex flex-col" data-modal-panel style="animation:slideInLeft .2s ease">
+        <div class="flex items-center justify-between mb-5">
+          <span class="font-serif font-bold text-lg text-plum">BeautyHire</span>
+          <button data-modal-close class="text-warm-500 p-1" aria-label="Закрыть меню">${ic('x', 20)}</button>
+        </div>
+        <p class="text-xs text-warm-500 mb-2">Раздел</p>
+        <div class="grid grid-cols-2 gap-1 bg-warm-100 rounded-lg p-1 text-sm font-medium mb-5">
+          <button data-modal-close data-action="go" data-href="#/vacancies" class="py-2 rounded-md ${state.roleTab === 'master' ? 'bg-white text-plum shadow-sm' : 'text-warm-500'}">Вакансии</button>
+          <button data-modal-close data-action="go" data-href="#/masters" class="py-2 rounded-md ${state.roleTab === 'salon' ? 'bg-white text-plum shadow-sm' : 'text-warm-500'}">Мастера</button>
+        </div>
+        <nav class="space-y-0.5 flex-1">
+          ${link('#/', 'search', 'Поиск')}
+          ${link('#/favorites', 'heart', 'Избранное')}
+          ${link('#/chats', 'message', 'Чаты')}
+          ${link('#/pricing', 'tag', 'Тарифы')}
+          ${isAuth ? link('#/profile', 'user', 'Профиль') : ''}
+          ${isAuth && state.profile?.role === 'salon' ? link('#/vacancy/new', 'briefcase', 'Разместить вакансию') : ''}
+        </nav>
+        <div class="pt-4 mt-4 border-t border-warm-200 space-y-2">
+          ${isAuth
+            ? `<button data-modal-close data-action="signout" class="btn-secondary w-full text-sm">Выйти</button>`
+            : `<button data-modal-close data-action="go" data-href="#/signup" class="btn-primary w-full text-sm">Регистрация</button>
+               <button data-modal-close data-action="go" data-href="#/login" class="btn-secondary w-full text-sm">Войти</button>`}
+        </div>
+      </div>
+    </div>`;
+}
+
 function openFilterDrawer() {
   const sidebar = document.getElementById('filterSidebar');
   if (!sidebar) return;
@@ -954,7 +1027,7 @@ function openFilterDrawer() {
       <div class="bg-white w-[86%] max-w-sm h-full overflow-y-auto p-5 relative" data-modal-panel style="animation:slideInLeft .2s ease">
         <div class="flex justify-between items-center mb-4">
           <h2 class="font-bold text-lg">Фильтры</h2>
-          <button data-modal-close class="text-warm-500 text-xl leading-none">✕</button>
+          <button data-modal-close class="text-warm-500">${ic('x', 18)}</button>
         </div>
         <div id="drawerSidebarSlot"></div>
         <button data-modal-close class="btn-primary w-full mt-4">Показать результаты</button>
@@ -977,7 +1050,7 @@ function chipRow() {
   if (!box) return;
   box.innerHTML = chips.map(([key, label]) => `
     <button data-action="remove-chip" data-key="${key}" class="tag ${tagClass(label)} inline-flex items-center gap-1.5 hover:opacity-80">
-      ${escapeHtml(label)} <span class="font-bold">✕</span>
+      ${escapeHtml(label)} ${ic('x', 12)}
     </button>`).join('');
 }
 
@@ -990,13 +1063,13 @@ async function refreshResults() {
     if (state.roleTab === 'master') {
       const items = await Data.listVacancies(state.filters);
       setResultsCount(items.length, 'вакансия', 'вакансии', 'вакансий');
-      box.innerHTML = items.length ? items.map(vacancyCard).join('') : emptyState('Пока нет вакансий по этим фильтрам. Попробуйте изменить условия слева.', '🔍');
+      box.innerHTML = items.length ? items.map(vacancyCard).join('') : emptyState('Пока нет вакансий по этим фильтрам. Попробуйте изменить условия слева.', 'search');
     } else {
       const items = await Data.listMasters(state.filters);
       setResultsCount(items.length, 'мастер', 'мастера', 'мастеров');
-      box.innerHTML = items.length ? items.map(m => fixYears(masterCard(m), m.experience_years || 0)).join('') : emptyState('Пока нет мастеров по этим фильтрам. Попробуйте изменить условия слева.', '🔍');
+      box.innerHTML = items.length ? items.map(m => fixYears(masterCard(m), m.experience_years || 0)).join('') : emptyState('Пока нет мастеров по этим фильтрам. Попробуйте изменить условия слева.', 'search');
     }
-  } catch (e) { box.innerHTML = emptyState('Не удалось загрузить данные: ' + e.message, '⚠️'); }
+  } catch (e) { box.innerHTML = emptyState('Не удалось загрузить данные: ' + e.message, 'alert'); }
 }
 
 function setResultsCount(n, one, few, many) {
@@ -1018,16 +1091,16 @@ async function renderVacancyDetail(id) {
   const isOwner = state.user && state.profile?.role === 'salon' && (v.salon_id === state.user.id || v.salon_id === 'me');
   app.innerHTML = `
   <div class="max-w-3xl mx-auto py-8">
-    <a href="#/vacancies" class="text-sm text-warm-500 hover:text-plum">← Все вакансии</a>
+    <a href="#/vacancies" class="inline-flex items-center gap-1.5 text-sm font-medium text-warm-600 hover:text-plum">${ic('back', 16)} Все вакансии</a>
     <div class="card p-6 mt-4">
       <div class="flex gap-4 items-center">
         <img src="${v.logo || salonLogo(salonName)}" class="w-16 h-16 rounded-full object-cover border border-warm-100 bg-white">
         <div>
           <div class="flex items-center gap-2 flex-wrap">
             <a href="#/salon/${salonKeyFor(v)}" class="text-2xl font-serif font-bold hover:text-plum">${escapeHtml(salonName)}</a>
-            ${v.is_premium ? '<span class="tag bg-gold-50 text-gold">★ Premium</span>' : ''}
+            ${v.is_premium ? `<span class="tag bg-gold-50 text-gold inline-flex items-center gap-1">${ic('star', 12, true)} Premium</span>` : ''}
           </div>
-          <p class="text-amber-500 text-sm">${stars(v.rating)} <span class="text-warm-500">(${v.reviews_count || 0} отзывов)</span></p>
+          <p class="text-gold text-sm">${stars(v.rating)} <span class="text-warm-500">(${v.reviews_count || 0} отзывов)</span></p>
         </div>
       </div>
 
@@ -1084,10 +1157,10 @@ async function renderMasterDetail(id) {
         <div>
           <div class="flex items-center gap-2 flex-wrap">
             <h1 class="text-2xl font-serif font-bold">${escapeHtml(m.full_name)}</h1>
-            ${m.verified ? '<span title="Проверенный профиль" class="text-plum">✓</span>' : ''}
+            ${m.verified ? '<span title="Проверенный профиль" class="text-plum">' + ic('check', 16) + '</span>' : ''}
           </div>
           <p class="text-warm-500 text-sm">${escapeHtml(m.specialty)} • ${m.experience_years || 0} ${yearsWord(m.experience_years || 0)} • ${escapeHtml(m.district || '')}</p>
-          <p class="text-amber-500">${stars(m.rating)} <span class="text-warm-500 text-sm">(${m.reviews_count || 0} отзывов)</span></p>
+          <p class="text-gold">${stars(m.rating)} <span class="text-warm-500 text-sm">(${m.reviews_count || 0} отзывов)</span></p>
         </div>
       </div>
 
@@ -1116,7 +1189,7 @@ async function renderMasterDetail(id) {
       <div class="space-y-3">
         ${reviews.length ? reviews.map(r => `
           <div class="border border-warm-100 rounded-xl p-3">
-            <p class="text-amber-500 text-sm">${stars(r.rating)}</p>
+            <p class="text-gold text-sm">${stars(r.rating)}</p>
             <p class="text-sm text-warm-600 mt-1">${escapeHtml(r.text)}</p>
             <p class="text-xs text-warm-500 mt-1">${escapeHtml(r.author_name || 'Салон')}</p>
           </div>`).join('') : '<p class="text-warm-500 text-sm">Пока нет отзывов.</p>'}
@@ -1127,25 +1200,16 @@ async function renderMasterDetail(id) {
 }
 
 function authDecorPanel() {
-  const floatIcons = ['✂️', '💅', '🪮', '🪞', '💇', '🧴', '🎀', '💄'];
+  const points = ['Вакансии салонов Алматы с зарплатой и графиком', 'Профили мастеров с портфолио и отзывами', 'Чат и онлайн-запись клиентов в одном месте'];
   return `
-  <div class="relative h-56 lg:h-full overflow-hidden bg-gradient-to-br from-plum-600 via-plum to-plum-700">
-    <svg viewBox="0 0 500 500" class="absolute inset-0 w-full h-full opacity-90" preserveAspectRatio="xMidYMid slice">
-      <g>
-        <circle cx="90" cy="80" r="16" fill="#F3D9E0"/><circle cx="72" cy="62" r="13" fill="#FBF6E7" opacity="0.85"/><circle cx="108" cy="62" r="13" fill="#FBF6E7" opacity="0.85"/><circle cx="72" cy="98" r="13" fill="#FBF6E7" opacity="0.85"/><circle cx="108" cy="98" r="13" fill="#FBF6E7" opacity="0.85"/><circle cx="90" cy="80" r="9" fill="#C9A227"/>
-        <circle cx="260" cy="150" r="14" fill="#FDF3EF"/><circle cx="244" cy="134" r="11" fill="#E29578" opacity="0.85"/><circle cx="276" cy="134" r="11" fill="#E29578" opacity="0.85"/><circle cx="244" cy="166" r="11" fill="#E29578" opacity="0.85"/><circle cx="276" cy="166" r="11" fill="#E29578" opacity="0.85"/><circle cx="260" cy="150" r="7" fill="#F3D9E0"/>
-        <circle cx="420" cy="90" r="15" fill="#F0F4EE"/><circle cx="403" cy="73" r="12" fill="#C9A227" opacity="0.8"/><circle cx="437" cy="73" r="12" fill="#C9A227" opacity="0.8"/><circle cx="403" cy="107" r="12" fill="#C9A227" opacity="0.8"/><circle cx="437" cy="107" r="12" fill="#C9A227" opacity="0.8"/><circle cx="420" cy="90" r="8" fill="#FBF6E7"/>
-        <circle cx="130" cy="320" r="17" fill="#FBF6E7"/><circle cx="111" cy="301" r="14" fill="#F3D9E0" opacity="0.85"/><circle cx="149" cy="301" r="14" fill="#F3D9E0" opacity="0.85"/><circle cx="111" cy="339" r="14" fill="#F3D9E0" opacity="0.85"/><circle cx="149" cy="339" r="14" fill="#F3D9E0" opacity="0.85"/><circle cx="130" cy="320" r="9" fill="#E29578"/>
-        <circle cx="380" cy="360" r="15" fill="#F0F4EE"/><circle cx="363" cy="343" r="12" fill="#FDF3EF" opacity="0.85"/><circle cx="397" cy="343" r="12" fill="#FDF3EF" opacity="0.85"/><circle cx="363" cy="377" r="12" fill="#FDF3EF" opacity="0.85"/><circle cx="397" cy="377" r="12" fill="#FDF3EF" opacity="0.85"/><circle cx="380" cy="360" r="8" fill="#C9A227"/>
-        <circle cx="250" cy="440" r="13" fill="#F3D9E0"/><circle cx="235" cy="425" r="10" fill="#F0F4EE" opacity="0.85"/><circle cx="265" cy="425" r="10" fill="#F0F4EE" opacity="0.85"/><circle cx="235" cy="455" r="10" fill="#F0F4EE" opacity="0.85"/><circle cx="265" cy="455" r="10" fill="#F0F4EE" opacity="0.85"/><circle cx="250" cy="440" r="7" fill="#FBF6E7"/>
-        <circle cx="40" cy="440" r="11" fill="#FDF3EF" opacity="0.7"/><circle cx="470" cy="250" r="12" fill="#F0F4EE" opacity="0.7"/><circle cx="200" cy="60" r="9" fill="#F3D9E0" opacity="0.7"/>
-      </g>
-    </svg>
-    ${floatIcons.map((ic, i) => `<span class="absolute text-2xl lg:text-3xl opacity-90" style="left:${(i * 47 + 12) % 90}%; top:${(i * 71 + 10) % 90}%; animation: floaty ${3 + i * 0.4}s ease-in-out infinite; animation-delay: ${i * 0.2}s;">${ic}</span>`).join('')}
-    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-      <p class="text-white/70 text-xs uppercase tracking-[0.2em] mb-2">Добро пожаловать в</p>
-      <h1 class="text-4xl lg:text-5xl font-serif font-bold text-white drop-shadow-sm">BeautyHire</h1>
-      <p class="text-white/80 text-sm mt-3 max-w-xs hidden lg:block">Место, где мастера находят салон, а салоны — мастера. Плюс запись клиентов с депозитом.</p>
+  <div class="relative h-48 lg:h-full overflow-hidden hero-bg">
+    <svg class="absolute inset-0 w-full h-full" aria-hidden="true"><defs><pattern id="gridp" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="white" stroke-opacity=".06"/></pattern></defs><rect width="100%" height="100%" fill="url(#gridp)"/></svg>
+    <div class="relative h-full flex flex-col justify-center px-8 lg:px-14 py-8">
+      <p class="text-white/60 text-sm mb-2">Платформа для бьюти-индустрии</p>
+      <h1 class="text-3xl lg:text-4xl font-serif font-bold text-white leading-tight">BeautyHire</h1>
+      <ul class="hidden lg:block mt-8 space-y-3 text-sm text-white/80 max-w-sm">
+        ${points.map(p => `<li class="flex items-start gap-3"><span class="mt-0.5 text-white/60">${ic('check', 16)}</span><span>${p}</span></li>`).join('')}
+      </ul>
     </div>
   </div>`;
 }
@@ -1156,19 +1220,19 @@ function renderAuth(mode) {
     ${authDecorPanel()}
     <div class="flex items-center justify-center py-10 px-4">
       <div class="w-full max-w-sm" style="animation: fadeIn .5s ease .1s backwards;">
-        <div class="flex gap-1 bg-warm-50 rounded-full p-1 mb-6 text-sm font-medium">
-          <a href="#/signup" class="flex-1 text-center rounded-full py-2 transition ${mode === 'signup' ? 'bg-white shadow-sm text-plum' : 'text-warm-500'}">Регистрация</a>
-          <a href="#/login" class="flex-1 text-center rounded-full py-2 transition ${mode === 'login' ? 'bg-white shadow-sm text-plum' : 'text-warm-500'}">Вход</a>
+        <div class="flex gap-1 bg-warm-50 rounded-lg p-1 mb-6 text-sm font-medium">
+          <a href="#/signup" class="flex-1 text-center rounded-md py-2 transition ${mode === 'signup' ? 'bg-white shadow-sm text-plum' : 'text-warm-500'}">Регистрация</a>
+          <a href="#/login" class="flex-1 text-center rounded-md py-2 transition ${mode === 'login' ? 'bg-white shadow-sm text-plum' : 'text-warm-500'}">Вход</a>
         </div>
         <h2 class="text-xl font-serif font-bold mb-5">${mode === 'login' ? 'С возвращением' : 'Создайте аккаунт'}</h2>
         <form id="authForm" class="space-y-3">
           ${mode === 'signup' ? `
           <div class="flex gap-2 mb-2">
-            <label class="flex-1 border border-warm-200 rounded-xl p-3 text-sm text-center cursor-pointer has-[:checked]:border-plum has-[:checked]:bg-plum-50 has-[:checked]:text-plum transition">
-              <input type="radio" name="role" value="master" class="hidden" checked>💇 Я мастер
+            <label class="flex-1 border border-warm-200 rounded-xl p-3 text-sm text-center cursor-pointer flex items-center justify-center gap-2 has-[:checked]:border-plum has-[:checked]:bg-plum-50 has-[:checked]:text-plum transition">
+              <input type="radio" name="role" value="master" class="hidden" checked>${ic('scissors', 16)} Я мастер
             </label>
-            <label class="flex-1 border border-warm-200 rounded-xl p-3 text-sm text-center cursor-pointer has-[:checked]:border-plum has-[:checked]:bg-plum-50 has-[:checked]:text-plum transition">
-              <input type="radio" name="role" value="salon" class="hidden">🏬 Я салон
+            <label class="flex-1 border border-warm-200 rounded-xl p-3 text-sm text-center cursor-pointer flex items-center justify-center gap-2 has-[:checked]:border-plum has-[:checked]:bg-plum-50 has-[:checked]:text-plum transition">
+              <input type="radio" name="role" value="salon" class="hidden">${ic('store', 16)} Я салон
             </label>
           </div>` : ''}
           <input required name="email" type="email" placeholder="Email" class="input">
@@ -1319,7 +1383,7 @@ async function getSalonDisplay(key) {
 async function renderSalonPublicPage(key) {
   app.innerHTML = `<p class="py-20 text-center text-warm-500">Загрузка…</p>`;
   const salon = await getSalonDisplay(key);
-  if (!salon) { app.innerHTML = emptyState('Салон не найден.', '🏬'); return; }
+  if (!salon) { app.innerHTML = emptyState('Салон не найден.', 'store'); return; }
   const services = await Data.getSalonServices(key, salon.specialty);
   app.innerHTML = `
   <div class="max-w-2xl mx-auto py-8">
@@ -1329,7 +1393,7 @@ async function renderSalonPublicPage(key) {
         <div>
           <h1 class="text-2xl font-serif font-bold">${escapeHtml(salon.name)}</h1>
           <p class="text-warm-500 text-sm">${escapeHtml(salon.district || '')}${salon.address ? ' • ' + escapeHtml(salon.address) : ''}</p>
-          ${salon.rating ? `<p class="text-amber-500 text-sm">${stars(salon.rating)} <span class="text-warm-500">(${salon.reviews_count || 0})</span></p>` : ''}
+          ${salon.rating ? `<p class="text-gold text-sm">${stars(salon.rating)} <span class="text-warm-500">(${salon.reviews_count || 0})</span></p>` : ''}
         </div>
       </div>
       <h3 class="font-bold mt-6 mb-3">Услуги и запись</h3>
@@ -1341,7 +1405,7 @@ async function renderSalonPublicPage(key) {
               <span class="text-plum font-bold text-sm">${money(s.price)}</span>
               <button data-action="start-booking" data-salon="${key}" data-service='${JSON.stringify(s).replace(/'/g, '&#39;')}' class="btn-primary text-sm !px-4 !py-2">Записаться</button>
             </div>
-          </div>`).join('') : emptyState('Салон пока не добавил услуги для записи.', '🗓️')}
+          </div>`).join('') : emptyState('Салон пока не добавил услуги для записи.', 'calendar')}
       </div>
     </div>
     <div id="bookingWidget" class="mt-6"></div>
@@ -1368,7 +1432,7 @@ async function renderBookingWidget(salonKey, service) {
       <input required name="client_phone" placeholder="Телефон" class="input">
       <input name="client_email" type="email" placeholder="Email (для уведомления о подтверждении)" class="input">
       <div class="bg-gold-50 text-warm-700 text-xs rounded-xl p-3">
-        💳 Депозит ${service.price >= 10000 ? '1 500' : '1 000'} ₸ бронирует за вами время. Приём оплаты картой подключается отдельно через Kaspi Pay — заявка создаётся без реального списания, пока это не подключено.
+        ${ic('card', 16)} Депозит ${service.price >= 10000 ? '1 500' : '1 000'} ₸ бронирует за вами время. Приём оплаты картой подключается отдельно через Kaspi Pay — заявка создаётся без реального списания, пока это не подключено.
       </div>
       <button class="btn-primary w-full">Забронировать</button>
     </form>
@@ -1385,7 +1449,7 @@ async function renderBookingWidget(salonKey, service) {
       });
       notifyByEmail({ to_email: fd.get('client_email'), subject: 'Заявка на запись создана', message: `Вы записаны в ${salon?.name || 'салон'} на ${b.date} в ${b.time}. Депозит: ${booking.deposit_amount} ₸.` });
       document.getElementById('bookingWidget').innerHTML = `<div class="card p-6 text-center">
-        <div class="text-3xl mb-2">✅</div>
+        <div class="mb-2 text-sage">${ic('check', 36)}</div>
         <p class="font-bold">Заявка принята</p>
         <p class="text-sm text-warm-500 mt-1">${escapeHtml(b.date)} в ${b.time} • депозит ${money(booking.deposit_amount)}</p>
         <p class="text-xs text-warm-500 mt-2">Салон подтвердит запись.</p>
@@ -1413,7 +1477,7 @@ async function renderServicesSettings() {
           <input class="input" data-f="name" placeholder="Название" value="${escapeHtml(s.name)}">
           <input class="input w-24" data-f="price" type="number" placeholder="₸" value="${s.price}">
           <input class="input w-20" data-f="duration_minutes" type="number" placeholder="мин" value="${s.duration_minutes}">
-          <button type="button" data-action="remove-service-row" class="text-red-500 px-2 shrink-0">✕</button>
+          <button type="button" data-action="remove-service-row" class="text-red-500 px-2 shrink-0">${ic('x', 18)}</button>
         </div>`).join('')}
       </div>
       <button type="button" data-action="add-service-row" class="text-sm text-plum hover:underline">+ Добавить услугу</button>
@@ -1455,7 +1519,7 @@ async function renderMyBookings() {
           <button data-action="booking-status" data-id="${b.id}" data-status="cancelled" class="btn-secondary !px-3 !py-1.5 text-sm !border-red-300 !text-red-500">Отклонить</button>
         ` : `<span class="tag ${tagClass(b.status)}">${b.status === 'confirmed' ? 'Подтверждено' : b.status === 'cancelled' ? 'Отменено' : 'Завершено'}</span>`}
       </div>
-    </div>`).join('') : emptyState('Пока нет записей клиентов.', '🗓️', 'Настроить услуги', '#/services');
+    </div>`).join('') : emptyState('Пока нет записей клиентов.', 'calendar', 'Настроить услуги', '#/services');
 }
 
 function renderPricing() {
@@ -1468,9 +1532,9 @@ function renderPricing() {
         <h3 class="font-bold text-lg">Бесплатно</h3>
         <p class="text-3xl font-extrabold my-3">0 ₸</p>
         <ul class="text-sm text-warm-600 space-y-2 mb-6">
-          <li>✓ 1 активная вакансия</li>
-          <li>✓ Базовый поиск мастеров</li>
-          <li>✓ Отклики и сообщения</li>
+          <li class="flex items-start gap-2"><span class="text-sage mt-0.5">${ic('check', 16)}</span><span>1 активная вакансия</span></li>
+          <li class="flex items-start gap-2"><span class="text-sage mt-0.5">${ic('check', 16)}</span><span>Базовый поиск мастеров</span></li>
+          <li class="flex items-start gap-2"><span class="text-sage mt-0.5">${ic('check', 16)}</span><span>Отклики и сообщения</span></li>
         </ul>
       </div>
       <div class="card p-6 border-2 border-plum relative">
@@ -1478,9 +1542,9 @@ function renderPricing() {
         <h3 class="font-bold text-lg">Premium</h3>
         <p class="text-3xl font-extrabold my-3">9 990 ₸<span class="text-sm font-normal text-warm-500">/мес</span></p>
         <ul class="text-sm text-warm-600 space-y-2 mb-6">
-          <li>✓ Неограниченные вакансии</li>
-          <li>✓ Продвижение в поиске</li>
-          <li>✓ Расширенные фильтры и статистика</li>
+          <li class="flex items-start gap-2"><span class="text-sage mt-0.5">${ic('check', 16)}</span><span>Неограниченные вакансии</span></li>
+          <li class="flex items-start gap-2"><span class="text-sage mt-0.5">${ic('check', 16)}</span><span>Продвижение в поиске</span></li>
+          <li class="flex items-start gap-2"><span class="text-sage mt-0.5">${ic('check', 16)}</span><span>Расширенные фильтры и статистика</span></li>
         </ul>
         <button data-action="go" data-href="#/vacancy/new" class="btn-primary w-full">Оформить</button>
         <p class="text-xs text-warm-500 mt-2">Оплата подключается отдельно (Kaspi/Freedom Pay) — см. INSTRUCTIONS.md</p>
@@ -1496,27 +1560,27 @@ function renderMyProfile() {
   const avatarUrl = p ? (isMaster ? (p.avatar_url || p.avatar || masterAvatar(p.full_name)) : (p.logo_url || salonLogo(p.salon_name))) : null;
 
   const navButtons = [
-    { href: '#/applications', icon: isMaster ? '📋' : '📌', label: isMaster ? 'Мои отклики' : 'Мои вакансии' },
-    { href: '#/favorites', icon: '❤️', label: 'Избранное' },
-    { href: '#/chats', icon: '💬', label: 'Чаты' },
+    { href: '#/applications', icon: ic('clipboard', 20), label: isMaster ? 'Мои отклики' : 'Мои вакансии' },
+    { href: '#/favorites', icon: ic('heart', 20), label: 'Избранное' },
+    { href: '#/chats', icon: ic('message', 20), label: 'Чаты' },
     ...(!isMaster ? [
-      { href: '#/services', icon: '🗓️', label: 'Услуги и расписание' },
-      { href: '#/bookings', icon: '📅', label: 'Записи клиентов' },
+      { href: '#/services', icon: ic('sliders', 20), label: 'Услуги и расписание' },
+      { href: '#/bookings', icon: ic('calendar', 20), label: 'Записи клиентов' },
     ] : []),
   ];
 
   app.innerHTML = `
   <div class="max-w-xl mx-auto py-8">
     <div class="card overflow-hidden mb-6">
-      <div class="h-24 bg-gradient-to-br from-plum-100 via-gold-50 to-sage-50 relative"></div>
+      <div class="h-20 bg-plum relative"></div>
       <div class="px-6 pb-6 -mt-10">
         ${p ? `
         <img src="${avatarUrl}" class="w-20 h-20 rounded-full object-cover border-4 border-white bg-white shadow-card">
         <h2 class="font-serif font-bold text-xl mt-3">${escapeHtml(isMaster ? p.full_name : p.salon_name)}</h2>
         <p class="text-warm-500 text-sm">${escapeHtml(isMaster ? p.specialty : (p.address || 'Адрес не указан'))}</p>
-        ${isMaster ? `<p class="text-amber-500 text-sm mt-1">${stars(p.rating || 0)} <span class="text-warm-500">(${p.reviews_count || 0} отзывов)</span></p>` : ''}
+        ${isMaster ? `<p class="text-gold text-sm mt-1">${stars(p.rating || 0)} <span class="text-warm-500">(${p.reviews_count || 0} отзывов)</span></p>` : ''}
         ` : `
-        <div class="w-20 h-20 rounded-full border-4 border-white bg-warm-100 shadow-card flex items-center justify-center text-2xl">✨</div>
+        <div class="w-20 h-20 rounded-full border-4 border-white bg-warm-100 shadow-card flex items-center justify-center text-warm-400">${ic('user', 32)}</div>
         <p class="text-warm-500 mt-3">Профиль ещё не заполнен — заполните карточку, чтобы вас видели ${isMaster ? 'салоны' : 'мастера'}.</p>
         <button data-action="go" data-href="#/onboarding/${state.profile?.role}" class="btn-primary text-sm mt-3">Заполнить профиль</button>
         `}
@@ -1525,8 +1589,8 @@ function renderMyProfile() {
 
     <div class="grid grid-cols-2 gap-3">
       ${navButtons.map(b => `
-        <button data-action="go" data-href="${b.href}" class="card p-4 flex items-center gap-3 text-left hover:shadow-cardHover hover:-translate-y-0.5 transition">
-          <span class="w-10 h-10 rounded-xl bg-plum-50 flex items-center justify-center text-lg shrink-0">${b.icon}</span>
+        <button data-action="go" data-href="${b.href}" class="card p-4 flex items-center gap-3 text-left hover:shadow-cardHover  transition">
+          <span class="w-10 h-10 rounded-lg bg-plum-50 text-plum flex items-center justify-center shrink-0">${b.icon}</span>
           <span class="text-sm font-medium">${b.label}</span>
         </button>`).join('')}
     </div>
@@ -1534,7 +1598,7 @@ function renderMyProfile() {
     ${!isMaster ? `
     <div class="card p-5 mt-6 border-2 border-dashed border-gold-50 bg-gold-50/40">
       <div class="flex items-center gap-3">
-        <span class="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-lg shrink-0">🚀</span>
+        <span class="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-plum shrink-0">${ic('trending', 20)}</span>
         <div class="flex-1">
           <p class="font-bold text-sm">Продвижение и реклама</p>
           <p class="text-xs text-warm-500 mt-0.5">Поднимайте вакансии в топ поиска и размещайте баннер салона на главной. Подключается вместе с Premium-тарифом.</p>
@@ -1561,7 +1625,7 @@ async function renderApplications() {
           <button data-action="withdraw-application" data-id="${a.id}" class="text-sm text-red-500 hover:underline">Отозвать</button>
         </div>
       </div>`;
-    }).join('') : emptyState('Пока нет откликов — самое время найти вакансию.', '📭', 'Смотреть вакансии', '#/vacancies');
+    }).join('') : emptyState('Пока нет откликов — самое время найти вакансию.', 'inbox', 'Смотреть вакансии', '#/vacancies');
   } else {
     const myVacancies = await Data.listMyVacancies();
     const addBtn = `<a href="#/vacancy/new" class="btn-primary inline-block mb-4">+ Новая вакансия</a>`;
@@ -1591,7 +1655,7 @@ async function renderApplications() {
 async function renderFavorites() {
   app.innerHTML = `<h1 class="text-2xl font-serif font-bold py-6">Избранное</h1><div id="favList" class="grid sm:grid-cols-2 gap-4">Загрузка…</div>`;
   const box = document.getElementById('favList');
-  if (!state.favorites.size) { box.innerHTML = emptyState('Здесь появятся сохранённые вакансии и мастера — нажмите на сердечко на карточке.', '❤️'); return; }
+  if (!state.favorites.size) { box.innerHTML = emptyState('Здесь появятся сохранённые вакансии и мастера — нажмите на сердечко на карточке.', 'heart'); return; }
   const cards = [];
   for (const key of state.favorites) {
     const [type, id] = key.split(':');
@@ -1622,26 +1686,26 @@ async function listMyConversations() {
 }
 
 async function renderChats() {
-  if (!state.user) { app.innerHTML = emptyState('Войдите, чтобы видеть переписку.', '💬', 'Войти', '#/login'); return; }
+  if (!state.user) { app.innerHTML = emptyState('Войдите, чтобы видеть переписку.', 'message', 'Войти', '#/login'); return; }
   app.innerHTML = `<h1 class="text-2xl font-serif font-bold py-6">Чаты</h1><div id="chatsList">Загрузка…</div>`;
   const list = await listMyConversations();
   document.getElementById('chatsList').innerHTML = list.length ? list.map(c => `
     <button data-action="open-chat" data-id="${c.id}" class="card p-4 mb-3 w-full text-left flex justify-between items-center hover:shadow-cardHover transition">
       <div><p class="font-bold">${escapeHtml(c.counterpart)}</p><p class="text-sm text-warm-500 truncate max-w-xs">${escapeHtml(c.lastMessage || c.specialty || 'Открыть переписку')}</p></div>
-      <span class="text-plum">→</span>
-    </button>`).join('') : emptyState('Чат откроется после отклика на вакансию или приглашения мастера.', '💬');
+      <span class="text-plum">${ic('chevron', 18)}</span>
+    </button>`).join('') : emptyState('Чат откроется после отклика на вакансию или приглашения мастера.', 'message');
 }
 
 let currentChatChannel = null;
 async function renderChatThread(appId) {
   app.innerHTML = `
   <div class="max-w-xl mx-auto py-6">
-    <button data-action="go" data-href="#/chats" class="text-sm text-warm-500 hover:text-plum">← Все чаты</button>
+    <button data-action="go" data-href="#/chats" class="inline-flex items-center gap-1.5 text-sm font-medium text-warm-600 hover:text-plum">${ic('back', 16)} Все чаты</button>
     <div class="card p-4 mt-3 h-[65vh] flex flex-col">
       <div id="chatMessages" class="flex-1 overflow-y-auto space-y-2 mb-3 px-1"></div>
       <form id="chatForm" class="flex gap-2">
         <input name="text" required placeholder="Сообщение…" class="input flex-1" autocomplete="off">
-        <button class="btn-primary !px-4">➤</button>
+        <button class="btn-primary !px-4" aria-label="Отправить">${ic('send', 18)}</button>
       </form>
     </div>
   </div>`;
@@ -1688,6 +1752,7 @@ document.addEventListener('click', async (e) => {
   const action = t.dataset.action;
 
   if (action === 'go') { e.preventDefault(); goto(t.dataset.href); }
+  if (action === 'open-menu') { e.preventDefault(); openMobileMenu(); }
   if (action === 'open-filter-drawer') { e.preventDefault(); openFilterDrawer(); }
   if (action === 'signout') signOut();
   if (action === 'reset-filters') { state.filters = { specialty: '', district: '', salaryRange: '', formats: [], experienced: false, text: '', sort: '' }; render(); }
@@ -1726,7 +1791,7 @@ document.addEventListener('click', async (e) => {
     catch (err) { showToast(err.message, 'error'); }
   }
 
-  if (action === 'open-chat') { e.stopPropagation(); renderChatThread(t.dataset.id); }
+  if (action === 'open-chat') { e.stopPropagation(); goto('#/chats/' + t.dataset.id); }
 
   if (action === 'withdraw-application') {
     e.stopPropagation();
@@ -1782,7 +1847,7 @@ document.addEventListener('click', async (e) => {
         <input class="input" data-f="name" placeholder="Название">
         <input class="input w-24" data-f="price" type="number" placeholder="₸">
         <input class="input w-20" data-f="duration_minutes" type="number" placeholder="мин">
-        <button type="button" data-action="remove-service-row" class="text-red-500 px-2 shrink-0">✕</button>
+        <button type="button" data-action="remove-service-row" class="text-red-500 px-2 shrink-0">${ic('x', 18)}</button>
       </div>`);
   }
 
@@ -1887,57 +1952,135 @@ document.querySelectorAll('[data-bottom-nav]').forEach(btn => {
   });
 });
 
+
 // ---------------------------------------------------------------------------
-// 10. ФОНОВАЯ АНИМАЦИЯ (canvas, лёгкая, отключается при prefers-reduced-motion)
+// 10. ФОН: плавно дрейфующие цветы (canvas, спрайты рисуются один раз)
 // ---------------------------------------------------------------------------
-function initBgAnimation() {
-  const canvas = document.getElementById('bgCanvas');
+function initFlowers() {
+  const canvas = document.getElementById('bgFlowers');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let w, h;
-  function resize() {
-    w = canvas.width = window.innerWidth * devicePixelRatio;
-    h = canvas.height = Math.max(window.innerHeight, document.body.scrollHeight) * devicePixelRatio;
-    canvas.style.height = h / devicePixelRatio + 'px';
-  }
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0;
+  const resize = () => { W = window.innerWidth; H = window.innerHeight; canvas.width = W * dpr; canvas.height = H * dpr; };
   resize();
   window.addEventListener('resize', resize);
 
-  const palette = ['rgba(122,31,59,0.10)', 'rgba(201,162,39,0.10)', 'rgba(107,127,94,0.10)', 'rgba(226,149,120,0.12)'];
-  const blobs = palette.map((color) => ({
-    x: Math.random() * w, y: Math.random() * h,
-    r: (220 + Math.random() * 160) * devicePixelRatio,
-    dx: (Math.random() - 0.5) * 0.35 * devicePixelRatio,
-    dy: (Math.random() - 0.5) * 0.35 * devicePixelRatio,
-    color,
+  const S = 120; // размер спрайта
+  function sprite(draw) {
+    const c = document.createElement('canvas'); c.width = c.height = S * dpr;
+    const g = c.getContext('2d'); g.scale(dpr, dpr); g.translate(S / 2, S / 2); draw(g); return c;
+  }
+  const petal = (g, len, wid, color, rot) => { g.save(); g.rotate(rot); g.fillStyle = color; g.beginPath(); g.ellipse(0, -len * 0.55, wid, len * 0.55, 0, 0, Math.PI * 2); g.fill(); g.restore(); };
+  const kinds = [
+    // сакура: 5 сердцевидных лепестков
+    (col) => sprite(g => { for (let i = 0; i < 5; i++) { g.save(); g.rotate(i * Math.PI * 2 / 5); g.fillStyle = col; g.beginPath(); g.moveTo(0, -4); g.bezierCurveTo(-20, -22, -12, -54, 0, -46); g.bezierCurveTo(12, -54, 20, -22, 0, -4); g.fill(); g.restore(); }
+      g.fillStyle = '#FFE08A'; g.beginPath(); g.arc(0, 0, 6, 0, 7); g.fill(); g.strokeStyle = 'rgba(190,40,110,.55)'; g.lineWidth = 1.4; for (let i = 0; i < 7; i++) { g.beginPath(); g.moveTo(0, 0); g.lineTo(Math.cos(i * 0.9) * 13, Math.sin(i * 0.9) * 13); g.stroke(); } }),
+    // ромашка: много тонких лепестков
+    (col) => sprite(g => { for (let i = 0; i < 14; i++) petal(g, 50, 6.5, col, i * Math.PI * 2 / 14); g.fillStyle = '#F9B93C'; g.beginPath(); g.arc(0, 0, 9, 0, 7); g.fill(); }),
+    // тюльпан-розетка: 6 круглых лепестков
+    (col) => sprite(g => { for (let i = 0; i < 6; i++) petal(g, 44, 15, col, i * Math.PI / 3); g.fillStyle = 'rgba(255,255,255,.55)'; g.beginPath(); g.arc(0, 0, 11, 0, 7); g.fill(); g.fillStyle = col; g.beginPath(); g.arc(0, 0, 6, 0, 7); g.fill(); }),
+    // роза: концентрические завитки
+    (col) => sprite(g => { for (let r = 44, i = 0; r > 6; r -= 8, i++) { g.fillStyle = col; g.globalAlpha = 0.55 + i * 0.09; g.beginPath(); for (let a = 0; a <= Math.PI * 2 + 0.1; a += 0.15) { const rr = r + Math.sin(a * 5 + i) * 4; g.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } g.fill(); g.strokeStyle = 'rgba(255,255,255,.6)'; g.lineWidth = 1.2; g.stroke(); } g.globalAlpha = 1; }),
+    // маленький бутон
+    (col) => sprite(g => { for (let i = 0; i < 4; i++) petal(g, 30, 11, col, i * Math.PI / 2 + 0.4); g.fillStyle = '#FFF4C2'; g.beginPath(); g.arc(0, 0, 5, 0, 7); g.fill(); }),
+  ];
+  const colors = ['#FFB3D1', '#FF8DB8', '#F9A8D4', '#FBCFE8', '#F472B6', '#FFC9DE', '#E9D5FF', '#FFD5C2', '#FF9EC4'];
+  const sprites = [];
+  kinds.forEach(k => colors.forEach(c => sprites.push(k(c))));
+
+  const count = Math.max(14, Math.min(34, Math.round(W * H / 55000)));
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const flowers = Array.from({ length: count }, () => ({
+    s: sprites[Math.floor(Math.random() * sprites.length)],
+    x: rnd(0, W), y: rnd(0, H), size: rnd(26, 78), vy: rnd(5, 16), amp: rnd(14, 46), freq: rnd(0.15, 0.4),
+    ph: rnd(0, 7), rot: rnd(0, 7), vr: rnd(-0.18, 0.18), a: rnd(0.28, 0.62),
   }));
 
-  function frame() {
-    ctx.clearRect(0, 0, w, h);
-    blobs.forEach((b) => {
-      b.x += b.dx; b.y += b.dy;
-      if (b.x < -b.r || b.x > w + b.r) b.dx *= -1;
-      if (b.y < -b.r || b.y > h + b.r) b.dy *= -1;
-      const grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
-      grad.addColorStop(0, b.color);
-      grad.addColorStop(1, 'rgba(255,255,255,0)');
-      ctx.fillStyle = grad;
-      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
-    });
-    if (!reduceMotion) requestAnimationFrame(frame);
+  let last = performance.now(), t = 0;
+  function draw(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    for (const f of flowers) {
+      if (!reduce) { f.y += f.vy * dt; f.rot += f.vr * dt; if (f.y - f.size > H) { f.y = -f.size; f.x = rnd(0, W); } }
+      const x = f.x + Math.sin(t * f.freq + f.ph) * f.amp;
+      ctx.save(); ctx.globalAlpha = f.a; ctx.translate(x, f.y); ctx.rotate(f.rot);
+      ctx.drawImage(f.s, -f.size / 2, -f.size / 2, f.size, f.size); ctx.restore();
+    }
+    if (!reduce && !document.hidden) requestAnimationFrame(draw);
   }
-  frame();
-
-  // при смене маршрута страница может стать длиннее/короче — досчитываем высоту
-  window.addEventListener('hashchange', () => setTimeout(resize, 250));
+  draw(performance.now());
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && !reduce) { last = performance.now(); requestAnimationFrame(draw); } });
 }
+
+// ---------------------------------------------------------------------------
+// 10b. СВОИ ВЫПАДАЮЩИЕ СПИСКИ (вместо системных — стилизуются и не зависят от тёмной темы браузера)
+// ---------------------------------------------------------------------------
+function closeAllSelects() {
+  document.querySelectorAll('.cs-list').forEach(l => { l.previousElementSibling?.setAttribute('aria-expanded', 'false'); l.remove(); });
+}
+function enhanceSelects() {
+  document.querySelectorAll('#app select, #modalRoot select').forEach(sel => {
+    if (sel.dataset.enhanced) return;
+    sel.dataset.enhanced = '1';
+    const wrap = document.createElement('div');
+    wrap.className = 'cs-wrap';
+    if (sel.classList.contains('w-auto')) wrap.style.display = 'inline-block';
+    sel.parentNode.insertBefore(wrap, sel);
+    wrap.appendChild(sel);
+    sel.classList.add('cs-native'); sel.tabIndex = -1; sel.setAttribute('aria-hidden', 'true');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = sel.className.replace('cs-native', '') + ' cs-btn';
+    btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = `<span class="cs-label"></span>${ic('chevron', 16)}`;
+    wrap.appendChild(btn);
+    const sync = () => { const o = sel.options[sel.selectedIndex]; btn.querySelector('.cs-label').textContent = o ? o.textContent : ''; };
+    sync();
+    sel.addEventListener('change', sync);
+    btn.addEventListener('click', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      const wasOpen = btn.getAttribute('aria-expanded') === 'true';
+      closeAllSelects();
+      if (wasOpen) return;
+      const ul = document.createElement('ul');
+      ul.className = 'cs-list'; ul.setAttribute('role', 'listbox');
+      [...sel.options].forEach((o, i) => {
+        const li = document.createElement('li');
+        li.setAttribute('role', 'option'); li.setAttribute('aria-selected', i === sel.selectedIndex ? 'true' : 'false');
+        li.innerHTML = `<span>${escapeHtml(o.textContent)}</span>${i === sel.selectedIndex ? ic('check', 15) : ''}`;
+        li.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          sel.selectedIndex = i;
+          sel.dispatchEvent(new Event('change', { bubbles: true }));
+          closeAllSelects();
+        });
+        ul.appendChild(li);
+      });
+      btn.after(ul); btn.setAttribute('aria-expanded', 'true');
+      ul.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+    });
+  });
+}
+document.addEventListener('click', (e) => { if (!e.target.closest('.cs-wrap')) closeAllSelects(); });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { closeAllSelects(); if (document.querySelector('[data-modal-overlay]')) closeModal(); }
+});
+(function watchSelects() {
+  let queued = false;
+  const run = () => { queued = false; enhanceSelects(); };
+  const mo = new MutationObserver(() => { if (!queued) { queued = true; requestAnimationFrame(run); } });
+  ['app', 'modalRoot'].forEach(id => { const el = document.getElementById(id); if (el) mo.observe(el, { childList: true, subtree: true }); });
+  enhanceSelects();
+})();
 
 // ---------------------------------------------------------------------------
 // 11. ИНИЦИАЛИЗАЦИЯ
 // ---------------------------------------------------------------------------
 async function init() {
-  initBgAnimation();
+  initFlowers();
   if (!DEMO_MODE) {
     const { data: { session } } = await sb.auth.getSession();
     if (session) { state.user = session.user; await loadMyProfile(); }

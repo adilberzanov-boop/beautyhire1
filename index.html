@@ -9,24 +9,24 @@
 <meta name="description" content="Платформа для бьюти-индустрии: салоны ищут мастеров, мастера ищут работу.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
     theme: {
       extend: {
-        fontFamily: { sans: ['Manrope', 'sans-serif'], serif: ['"Playfair Display"', 'serif'] },
+        fontFamily: { sans: ['"IBM Plex Sans"', 'system-ui', 'sans-serif'], serif: ['"Source Serif 4"', 'Georgia', 'serif'] },
         colors: {
-          plum: { DEFAULT: '#7A1F3B', 50:'#FBEFF2', 100:'#F3D9E0', 500:'#8C2A48', 600:'#7A1F3B', 700:'#5C172D' },
-          peach: { DEFAULT: '#E29578', 50: '#FDF3EF' },
-          gold: { DEFAULT: '#C9A227', 50: '#FBF6E7' },
-          sage: { DEFAULT: '#6B7F5E', 50: '#F0F4EE' },
-          warm: { 50:'#FBF7F5', 100:'#F1E7E2', 200:'#E4D4CC', 300:'#CDB6AB', 400:'#A08A7E', 500:'#8A7D74', 600:'#6E5B52', 700:'#4A3B35' },
-          ink: '#1A1A1A',
-          surface: '#F7F7F8'
+          plum: { DEFAULT: '#C92A78', 50: '#FFF0F6', 100: '#FFD9E8', 500: '#E0488C', 600: '#C92A78', 700: '#A31D62' },
+          peach: { DEFAULT: '#F2603F', 50: '#FFEDE8' },
+          gold: { DEFAULT: '#B45309', 50: '#FFF4DB' },
+          sage: { DEFAULT: '#0F9D74', 50: '#E3F7F0' },
+          warm: { 50:'#FCF7FA', 100:'#F7EEF3', 200:'#EEDDE7', 300:'#D3BCCB', 400:'#A78E9E', 500:'#7C6678', 600:'#594552', 700:'#3C2B37' },
+          ink: '#2A1722',
+          surface: '#FFF7FA'
         },
-        boxShadow: { card: '0 2px 10px rgba(0,0,0,0.06)', cardHover: '0 8px 24px rgba(107,45,92,0.12)' }
+        boxShadow: { card: '0 1px 3px rgba(120,30,80,0.06), 0 8px 24px -12px rgba(120,30,80,0.14)', cardHover: '0 12px 32px -10px rgba(201,42,120,0.30)' }
       }
     }
   }
@@ -40,63 +40,92 @@
 
 <style>
   :root, html { color-scheme: light; }
-  html, body { background-color: #F7F7F8; }
-  body { color: #1A1A1A; }
-  .tag { @apply inline-block bg-warm-100 text-warm-700 text-xs px-3 py-1 rounded-full; }
-  .card { @apply bg-white rounded-2xl shadow-card border border-warm-100; animation: cardIn .35s ease backwards; }
-  .btn-primary { @apply bg-plum text-white px-4 py-2.5 rounded-xl font-semibold transition-all duration-200; }
-  .btn-primary:hover { @apply bg-plum-700; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(122,31,59,0.28); }
-  .btn-primary:active { transform: translateY(0) scale(0.97); }
-  .btn-secondary { @apply bg-white text-plum border border-plum px-4 py-2.5 rounded-xl font-semibold transition-all duration-200; }
-  .btn-secondary:hover { @apply bg-plum-50; transform: translateY(-2px); }
-  .btn-secondary:active { transform: translateY(0) scale(0.97); }
-  .input { @apply w-full border border-warm-200 rounded-xl px-3 py-2.5 text-sm bg-white text-ink focus:outline-none focus:ring-2 focus:ring-plum/40 focus:border-plum; color-scheme: light; }
-  input, select, textarea { color-scheme: light; }
-  select { background-color: #fff; color: #1A1A1A; }
-  select option { background-color: #fff; color: #1A1A1A; }
-  .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  ::-webkit-scrollbar { height: 6px; width: 6px; }
-  #configBanner { display: none; }
-  body.not-configured #configBanner { display: block; }
-  .swiper { border-radius: 1rem; }
-  .badge-dot { @apply absolute -top-1 -right-1 bg-plum text-white text-[10px] leading-none rounded-full min-w-[16px] h-4 flex items-center justify-center px-1; }
-  .fav-active { color: #7A1F3B !important; }
-  @keyframes fadeIn { from { opacity:0; transform: translateY(6px);} to { opacity:1; transform: translateY(0);} }
+  html, body { background-color: #FFF7FA; }
+  body { color: #2A1722; font-family: "IBM Plex Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+         background-image: radial-gradient(900px 420px at 100% -60px, rgba(255,140,190,.28), transparent 62%), radial-gradient(700px 380px at -5% 140px, rgba(196,160,255,.20), transparent 60%);
+         background-repeat: no-repeat; }
+  h1, h2, h3 { letter-spacing: -0.01em; }
+
+  .hero-bg { background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%3Cg fill='white' fill-opacity='.20'%3E%3Cellipse cx='0' cy='-24' rx='13' ry='24'/%3E%3Cellipse cx='0' cy='-24' rx='13' ry='24' transform='rotate(72)'/%3E%3Cellipse cx='0' cy='-24' rx='13' ry='24' transform='rotate(144)'/%3E%3Cellipse cx='0' cy='-24' rx='13' ry='24' transform='rotate(216)'/%3E%3Cellipse cx='0' cy='-24' rx='13' ry='24' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='8' fill='%23FFE08A' fill-opacity='.55'/%3E%3C/svg%3E") no-repeat right -50px top -60px / 300px,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%3Cg fill='white' fill-opacity='.20'%3E%3Cellipse cx='0' cy='-24' rx='13' ry='24'/%3E%3Cellipse cx='0' cy='-24' rx='13' ry='24' transform='rotate(72)'/%3E%3Cellipse cx='0' cy='-24' rx='13' ry='24' transform='rotate(144)'/%3E%3Cellipse cx='0' cy='-24' rx='13' ry='24' transform='rotate(216)'/%3E%3Cellipse cx='0' cy='-24' rx='13' ry='24' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='8' fill='%23FFE08A' fill-opacity='.55'/%3E%3C/svg%3E") no-repeat right 180px bottom -70px / 170px,
+      radial-gradient(520px 260px at 92% 0%, rgba(255,170,120,.50), transparent 70%),
+      linear-gradient(120deg, #A31D62 0%, #D63384 52%, #8B5CF6 118%); }
+
+  .tag { display:inline-block; background:#F7EEF3; color:#3C2B37; font-size:.75rem; line-height:1rem; padding:.3rem .65rem; border-radius:.5rem; font-weight:500; }
+  .card { background:rgba(255,255,255,.96); border:1px solid #F3DCE8; border-radius:.9rem; box-shadow: 0 1px 3px rgba(120,30,80,.06), 0 8px 24px -12px rgba(120,30,80,.14); transition: box-shadow .2s ease, border-color .2s ease; }
+  .card:hover { border-color:#F0B6D0; }
+
+  .btn-primary { display:inline-flex; align-items:center; justify-content:center; gap:.4rem; background: linear-gradient(135deg,#E0488C,#C92A78); color:#fff; padding:.65rem 1.1rem; border-radius:.65rem; font-weight:600; border:0; cursor:pointer;
+                 box-shadow: 0 6px 16px -6px rgba(224,72,140,.65); transition: box-shadow .15s ease, filter .15s ease, transform .15s ease; }
+  .btn-primary:hover { filter:brightness(1.07); box-shadow: 0 10px 22px -8px rgba(224,72,140,.8); }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-secondary { display:inline-flex; align-items:center; justify-content:center; gap:.4rem; background:#fff; color:#C92A78; padding:.65rem 1.1rem; border-radius:.65rem; font-weight:600; border:1px solid #F0B6D0; cursor:pointer; transition: background-color .15s ease, border-color .15s ease; }
+  .btn-secondary:hover { background:#FFF0F6; border-color:#E0488C; }
+
+  .input, input.input, textarea.input { width:100%; border:1px solid #E6CBD9; border-radius:.65rem; padding:.62rem .8rem; font-size:.875rem; background:#fff; color:#2A1722; color-scheme: light; transition: box-shadow .15s ease, border-color .15s ease; }
+  .input:focus { outline:none; border-color:#E0488C; box-shadow: 0 0 0 3px rgba(224,72,140,.18); }
+  select.input { -webkit-appearance:none; appearance:none; padding-right:2.1rem; cursor:pointer; }
+  select option { background-color:#fff; color:#2A1722; }
+  input, textarea { color-scheme: light; }
+  #headerSearchForm select { border:0; background-color:transparent; }
+
+  /* собственный выпадающий список */
+  .cs-wrap { position:relative; display:block; }
+  .cs-native { position:absolute !important; left:0; top:0; width:100% !important; height:100% !important; opacity:0; pointer-events:none; }
+  .cs-btn { display:flex !important; align-items:center; justify-content:space-between; gap:.5rem; text-align:left; cursor:pointer; color:#2A1722; }
+  .cs-btn .cs-label { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cs-btn svg { color:#E0488C; transition: transform .15s ease; }
+  .cs-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .cs-list { position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:70; max-height:272px; overflow-y:auto; margin:0; padding:.35rem; list-style:none; min-width:max-content;
+             background:#fff; border:1px solid #F0B6D0; border-radius:.8rem; box-shadow: 0 18px 40px -12px rgba(120,30,80,.35); animation: fadeIn .12s ease; }
+  .cs-list li { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.55rem .7rem; border-radius:.5rem; font-size:.875rem; color:#2A1722; cursor:pointer; }
+  .cs-list li:hover, .cs-list li.cs-active { background:#FFF0F6; color:#A31D62; }
+  .cs-list li[aria-selected="true"] { font-weight:600; color:#C92A78; }
+
+  button:focus-visible, a:focus-visible { outline: 2px solid #E0488C; outline-offset: 2px; }
+  .line-clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  ::-webkit-scrollbar { height:6px; width:6px; }
+  #configBanner { display:none; }
+  body.not-configured #configBanner { display:block; }
+  .swiper { border-radius:.75rem; }
+  .badge-dot { position:absolute; top:-4px; right:-4px; background:#F2603F; color:#fff; font-size:10px; line-height:1; border-radius:9999px; min-width:16px; height:16px; display:flex; align-items:center; justify-content:center; padding:0 4px; }
+  .fav-active { color:#E0488C !important; }
+  .filter-pill { transition: all .15s ease; }
+  #bgFlowers { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:-1; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(4px);} to { opacity:1; transform: translateY(0);} }
   @keyframes slideInLeft { from { transform: translateX(-100%);} to { transform: translateX(0);} }
-  @keyframes cardIn { from { opacity:0; transform: translateY(10px) scale(0.98);} to { opacity:1; transform: translateY(0) scale(1);} }
-  @keyframes floaty { 0%,100% { transform: translateY(0) rotate(0deg);} 50% { transform: translateY(-10px) rotate(6deg);} }
-  @keyframes pulseSlow { 0%,100% { transform: scale(1); opacity:0.6;} 50% { transform: scale(1.15); opacity:0.35;} }
-  #results > *, .grid > .card { animation: cardIn .4s ease backwards; }
-  #results > *:nth-child(1) { animation-delay: .02s; } #results > *:nth-child(2) { animation-delay: .06s; }
-  #results > *:nth-child(3) { animation-delay: .1s; } #results > *:nth-child(4) { animation-delay: .14s; }
-  #results > *:nth-child(5) { animation-delay: .18s; } #results > *:nth-child(6) { animation-delay: .22s; }
-  #results > *:nth-child(n+7) { animation-delay: .26s; }
-  .input, select { transition: box-shadow .15s ease, border-color .15s ease; }
-  .tag { transition: transform .15s ease; }
-  .tag:hover { transform: scale(1.05); }
+  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
 </style>
 </head>
 <body class="bg-surface">
 
-<canvas id="bgCanvas" class="fixed inset-0 w-full pointer-events-none" style="z-index:-1"></canvas>
+<canvas id="bgFlowers" aria-hidden="true"></canvas>
+
 
 <!-- Баннер, если ключи Supabase ещё не подставлены -->
 <div id="configBanner" class="bg-amber-100 text-amber-900 text-sm text-center py-2 px-4">
-  ⚠️ Supabase не подключён. Сайт работает в демо-режиме без сохранения данных. Инструкция — в файле <b>INSTRUCTIONS.md</b>.
+  Supabase не подключён. Сайт работает в демо-режиме без сохранения данных. Инструкция: <b>docs/SETUP.md</b>.
 </div>
 
 <!-- ХЕДЕР -->
-<header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-warm-100">
+<header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-plum-100">
   <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
-    <a href="#/" class="text-2xl font-serif font-bold text-plum shrink-0 tracking-tight">BeautyHire</a>
+    <button data-action="open-menu" class="lg:hidden -ml-1 w-10 h-10 shrink-0 flex items-center justify-center rounded-lg text-warm-700 hover:bg-warm-100" aria-label="Открыть меню">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <a href="#/" class="flex items-center gap-2 shrink-0" aria-label="BeautyHire">
+      <span class="w-9 h-9 rounded-xl hero-bg text-white grid place-items-center font-serif font-bold text-lg leading-none shadow-md">B</span>
+      <span class="hidden sm:inline text-lg font-semibold text-ink tracking-tight">BeautyHire</span>
+    </a>
 
-    <div class="hidden sm:flex items-center gap-1 bg-warm-100 rounded-full p-1 text-sm font-medium shrink-0">
-      <button data-role-tab="master" class="role-tab px-3 lg:px-4 py-1.5 rounded-full transition">Я ищу работу</button>
-      <button data-role-tab="salon" class="role-tab px-3 lg:px-4 py-1.5 rounded-full transition">Я ищу сотрудника</button>
+    <div class="hidden sm:flex items-center gap-1 bg-warm-100 rounded-lg p-1 text-sm font-medium shrink-0">
+      <button data-role-tab="master" class="role-tab px-3 lg:px-4 py-1.5 rounded-md transition">Я ищу работу</button>
+      <button data-role-tab="salon" class="role-tab px-3 lg:px-4 py-1.5 rounded-md transition">Я ищу сотрудника</button>
     </div>
 
-    <form id="headerSearchForm" class="hidden lg:flex flex-1 items-center gap-2 bg-white border border-warm-200 rounded-xl pl-3 pr-1 py-1 max-w-xl">
-      <span class="text-warm-500 text-sm">🔍</span>
+    <form id="headerSearchForm" class="hidden lg:flex flex-1 items-center gap-2 bg-white border border-warm-300 rounded-lg pl-3 pr-1 py-1 max-w-xl">
+      <span class="text-warm-500"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
       <input id="headerSearchText" type="text" placeholder="Должность или услуга" class="flex-1 bg-white text-ink px-1 text-sm py-1.5 focus:outline-none">
       <div class="w-px h-5 bg-warm-200"></div>
       <select id="headerSearchDistrict" class="bg-white text-ink text-sm px-1 py-1.5 focus:outline-none max-w-[140px] rounded-lg">
@@ -119,7 +148,7 @@
   <div class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
     <div class="col-span-2 md:col-span-1">
       <p class="text-xl font-serif font-bold text-plum mb-2">BeautyHire</p>
-      <p class="text-sm text-warm-500">Площадка для бьюти-индустрии Алматы: салоны находят мастеров, мастера находят работу.</p>
+      <p class="text-sm text-warm-500">Платформа для бьюти-индустрии Алматы: поиск мастеров для салонов и работы для мастеров.</p>
     </div>
     <div>
       <p class="font-semibold text-sm mb-3">Мастерам</p>
@@ -156,16 +185,16 @@
 <!-- МОБИЛЬНАЯ НИЖНЯЯ ПАНЕЛЬ -->
 <nav class="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-warm-100 flex justify-around py-2 z-40">
   <button data-bottom-nav="browse" class="flex flex-col items-center gap-0.5 text-xs px-3 py-1 text-warm-500 relative">
-    <span>🔍</span>Поиск
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Поиск
   </button>
   <button data-bottom-nav="favorites" class="flex flex-col items-center gap-0.5 text-xs px-3 py-1 text-warm-500 relative">
-    <span>❤️</span>Избранное<span id="favBadgeMobile" class="badge-dot hidden"></span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/></svg>Избранное<span id="favBadgeMobile" class="badge-dot hidden"></span>
   </button>
   <button data-bottom-nav="chats" class="flex flex-col items-center gap-0.5 text-xs px-3 py-1 text-warm-500 relative">
-    <span>💬</span>Чаты<span id="msgBadgeMobile" class="badge-dot hidden"></span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Чаты<span id="msgBadgeMobile" class="badge-dot hidden"></span>
   </button>
   <button data-bottom-nav="profile" class="flex flex-col items-center gap-0.5 text-xs px-3 py-1 text-warm-500 relative">
-    <span>👤</span>Профиль
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Профиль
   </button>
 </nav>
 
